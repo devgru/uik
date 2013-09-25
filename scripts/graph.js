@@ -185,7 +185,8 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             return yOutdoor(uik.outdoorPercents);
         })
         .attr('fill', function (uik) { return colorScale(uik.sobyaninPercents)})
-        .attr('r', 1)
+        .attr('r', 1.5)
+        .attr('opacity', 0.8)
         .on('click', function() {
             console.log(arguments)
         })
@@ -216,7 +217,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             group
                 .selectAll('circle')
                 .data(relatedUiks, function (uik) { return uik.uik; })
-                .attr('r', wasUnclicked ? 4 : 1)
+                .attr('r', wasUnclicked ? 6 : 1.5)
         })
     ;
 
