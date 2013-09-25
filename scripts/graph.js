@@ -181,7 +181,9 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             return xObservers(uik.observer + Math.random());
         })
         .attr('cy',function (uik) {
-            if (uik.outdoorPercents == 0) return yOutdoor(minY) + y0Offset;
+            if (uik.outdoorPercents == 0) {
+                return Math.random() * 30 + yOutdoor(minY) + y0Offset;
+            }
             return yOutdoor(uik.outdoorPercents);
         })
         .attr('fill', function (uik) { return colorScale(uik.sobyaninPercents)})
