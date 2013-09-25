@@ -173,7 +173,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
     var colorScale = d3.scale.linear()
         .domain([0, 100])
         .interpolate(d3.interpolateHsl)
-        .range(["hsl(800, 0%, 100%)", "hsl(910, 80%, 0%)"]);
+        .range(["#1dbe61", "#1d52bd"]);
 
     newbies
         .append('circle')
@@ -199,7 +199,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .attr("class", "unclicked")
         .attr('cx', function(control) { return 800 + control * 3; })
         .attr('cy', 20)
-        .attr('fill', 100)
+        .attr('fill', function (d) { return colorScale(d)})
         .attr('r', 6)
         .on('click', function(control) {
             var button = d3.select(this);
