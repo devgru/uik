@@ -167,7 +167,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
     newbies = group
         .selectAll('circle')
-        .data(data)
+        .data(data, function (uik) { return uik.uik; })
         .enter();
 
     var colorScale = d3.scale.linear()
@@ -215,7 +215,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             console.log('selected', relatedUiks.length, 'uiks');
             group
                 .selectAll('circle')
-                .data(relatedUiks)
+                .data(relatedUiks, function (uik) { return uik.uik; })
                 .attr('r', wasUnclicked ? 4 : 1)
         })
     ;
