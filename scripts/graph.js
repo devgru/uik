@@ -230,6 +230,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .enter()
         .append('g');
 
+    // квадраты регионов графика
     regionsGroups
         .append('rect')
         .attr('class', 'group')
@@ -237,23 +238,23 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             return 0.5 + xObservers(region.observers);
         })
         .attr('y', function (region) {
-            return yOutdoor(region.percents.to);
+            return 0.5 + yOutdoor(region.percents.to);
         })
         .attr('width', xObservers(1))
         .attr('height', yOutdoor(10) - yOutdoor(100))
+
+    // прямоугольник для цифр
     regionsGroups
-        .append('rect')
+        .append('text')
         .attr('class', 'group')
         .attr('x', function (region) {
             return 0.5 + xObservers(region.observers) + xObservers(1) - 50;
         })
         .attr('y', function (region) {
-            return yOutdoor(region.percents.to);
+            return 0.5 + yOutdoor(region.percents.to);
         })
         .attr('width', 50)
         .attr('height', 40);
-
-
 
     control
         .selectAll('circle')
