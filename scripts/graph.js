@@ -226,7 +226,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
     }
 
     var regionsGroups = region
-        .selectAll('rect')
+        .selectAll('g')
         .data(regions)
         .enter()
         .append('g');
@@ -243,20 +243,42 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         })
         .attr('width', xObservers(1))
         .attr('height', yOutdoor(10) - yOutdoor(100))
+    ;
 
     // прямоугольник для цифр
     regionsGroups
         .append('text')
-        .attr('class', 'group')
+        .attr('class', 'total')
         .attr('x', function (region) {
-            return 0.5 + xObservers(region.observers) + xObservers(1) - 50;
+            return 0.5 + xObservers(region.observers) + xObservers(1) - 30;
         })
         .attr('y', function (region) {
-            return 0.5 + yOutdoor(region.percents.to);
+            return 0.5 + 20 + yOutdoor(region.percents.to);
         })
         .text(function (region) { return region.uiks.length; })
-        .attr('width', 50)
-        .attr('height', 40);
+    ;
+
+    // прямоугольник для цифр
+    regionsGroups
+        .append('text')
+        .attr('class', 'selected')
+        .attr('x', function (region) {
+            return 0.5 + xObservers(region.observers) + xObservers(1) - 30;
+        })
+        .attr('y', function (region) {
+            return 0.5 + 20 + yOutdoor(region.percents.to);
+        })
+        .text(function (region) { return 0; })
+    ;
+
+    region
+        .selectAll('g')
+        .data(regions)
+        .select('text.selected')
+        .text(function (region) {
+            console.log('check selected for', region)
+        })
+
 
     control
         .selectAll('circle')
@@ -276,7 +298,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             var relatedUiks = data.filter(function (uik) {
                 var sp = uik.sobyaninPercents;
                 var result = (sp < control) && (sp > (control - 5));
-                return  result;
+                return result;
             });
             group
                 .selectAll('circle')
