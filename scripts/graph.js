@@ -51,7 +51,12 @@ var y0Axis = d3.svg.axis()
 var yOutdoorAxis = d3.svg.axis()
     .scale(yOutdoor)
     .orient("left")
-    .ticks(20, '.1');
+    .ticks(20, function (num) {
+        var n = num.toFixed(1);
+        if(n.substring(0, 1) == '0') {
+            return n.substring(1);
+        }
+    });
 
 var xSobyanin = d3.scale.linear()
     .domain([30, 100])
