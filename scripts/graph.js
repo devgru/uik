@@ -52,11 +52,8 @@ var yOutdoorAxis = d3.svg.axis()
     .scale(yOutdoor)
     .orient("left")
     .ticks(20, function (num) {
-        var n = num.toFixed(1);
-        if(n.substring(0, 1) == '0') {
-            return n.substring(1);
-        }
-        return n;
+        if(num >= 1) return num;
+        return num.toFixed(1).substring(1);
     });
 
 var xSobyanin = d3.scale.linear()
@@ -279,7 +276,11 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .attr('y', function (region) {
             return 0.5 + 40 + yOutdoor(region.percents.to);
         })
-        .text(function (region) { return 0; })
+        .text(function (region) {
+            if(region.uiks.length == 0)
+                return '';
+            return 0;
+        })
     ;
 
     var updateRegions = function () {
