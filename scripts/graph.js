@@ -51,7 +51,7 @@ var y0Axis = d3.svg.axis()
 var yOutdoorAxis = d3.svg.axis()
     .scale(yOutdoor)
     .orient("left")
-    .ticks(20);
+    .ticks(20, '.1');
 
 var xSobyanin = d3.scale.linear()
     .domain([30, 100])
@@ -72,8 +72,7 @@ var xSobyaninAxis = d3.svg.axis()
 var xObserversAxis = d3.svg.axis()
     .scale(xObservers)
     .orient("bottom")
-    .ticks(6)
-    ;
+    .ticks(6);
 
 $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
@@ -257,7 +256,11 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .attr('y', function (region) {
             return 0.5 + 20 + yOutdoor(region.percents.to);
         })
-        .text(function (region) { return region.uiks.length; })
+        .text(function (region) {
+            if(region.uiks.length == 0)
+                return '';
+            return region.uiks.length;
+        })
     ;
 
     // прямоугольник для количества выделенных
@@ -279,6 +282,8 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             .data(regions)
             .select('text.selected')
             .text(function (region) {
+                if(region.uiks.length == 0)
+                    return '';
                 return intersect(region.uiks, selectedUiks);
             })
         ;
