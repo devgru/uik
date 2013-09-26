@@ -338,22 +338,10 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 });
 
 
-function intersect(a, b)
-{
-    var ai=0, bi=0;
-    var result = 0;
-
-    while( ai < a.length && bi < b.length )
-    {
-        if      (a[ai] < b[bi] ){ ai++; }
-        else if (a[ai] > b[bi] ){ bi++; }
-        else /* they're equal */
-        {
-            result++;
-            ai++;
-            bi++;
-        }
-    }
-
-    return result;
+function intersect(a, b) {
+    var c = 0
+    for (var i = 0; i < a.length; i++)
+        if (b.indexOf(a[i]) != -1)
+            c++;
+    return c
 }
