@@ -35,7 +35,7 @@ var yOutdoor = d3.scale.log()
     .range([height, 0]);
 
 // отступ для нуля на лог-шкале
-var y0Offset = 20;
+var y0Offset = 50;
 
 // нуль
 var y0 = d3.scale.ordinal()
@@ -162,8 +162,9 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
 
 
-    group = svg.append("g")
-    control = svg.append("g")
+    var group = svg.append("g")
+    var control = svg.append("g")
+    var region = svg.append("g")
 
     newbies = group
         .selectAll('circle')
@@ -182,17 +183,55 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         })
         .attr('cy',function (uik) {
             if (uik.outdoorPercents == 0) {
-                return Math.random() * 30 + yOutdoor(minY) + y0Offset;
+                return - Math.random() * 30 + yOutdoor(minY) + y0Offset;
             }
             return yOutdoor(uik.outdoorPercents);
         })
         .attr('fill', function (uik) { return colorScale(uik.sobyaninPercents)})
         .attr('r', 1.5)
         .attr('opacity', 0.8)
-        .on('click', function() {
-            console.log(arguments)
-        })
     ;
+
+
+    var getPercent = function (percentBlock) {
+        if(percentBlock == 0) return 0.1;
+        if(percentBlock == 1) return 1;
+        if(percentBlock == 2) return 10;
+        if(percentBlock == 3) return 100;
+    };
+
+    var getPercentPair = function (percentBlock) {
+        return { from: getPercent(percentBlock), to: getPercent(percentBlock + 1)};
+    };
+
+    var regions = [];
+    for (var observers = 0; observers < 5; observers++) {
+        for (var percentBlock = 0; percentBlock < 3; percentBlock++) {
+            regions.push(
+                {
+                    observers: observers,
+                    percents: getPercentPair(percentBlock)
+                }
+            );
+        }
+    }
+
+    region
+        .selectAll('rect')
+        .data(regions)
+        .enter()
+        .append('rect')
+        .attr('class', 'group')
+        .attr('x', function (region) {
+            return xObservers(region.observers);
+        })
+        .attr('y', function (region) {
+            return yOutdoor(region.percents.to);
+        })
+        .attr('width', xObservers(1))
+        .attr('height', yOutdoor(100) - yOutdoor(10))
+
+
 
     control
         .selectAll('circle')
@@ -212,10 +251,8 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             var relatedUiks = data.filter(function (uik) {
                 var sp = uik.sobyaninPercents;
                 var result = (sp < control) && (sp > (control - 5));
-                if(uik.uik == 202) console.log('uik', uik.uik, 'returns', result, 'for', sp);
                 return  result;
             });
-            console.log('selected', relatedUiks.length, 'uiks');
             group
                 .selectAll('circle')
                 .data(relatedUiks, function (uik) { return uik.uik; })
