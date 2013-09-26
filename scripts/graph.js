@@ -258,7 +258,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .text(function (region) { return region.uiks.length; })
     ;
 
-    // прямоугольник для цифр
+    // прямоугольник для количества выделенных
     regionsGroups
         .append('text')
         .attr('class', 'selected')
@@ -266,19 +266,24 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             return 0.5 + xObservers(region.observers) + xObservers(1) - 30;
         })
         .attr('y', function (region) {
-            return 0.5 + 20 + yOutdoor(region.percents.to);
+            return 0.5 + 40 + yOutdoor(region.percents.to);
         })
         .text(function (region) { return 0; })
     ;
 
-    region
-        .selectAll('g')
-        .data(regions)
-        .select('text.selected')
-        .text(function (region) {
-            console.log('check selected for', region)
-        })
+    var updateRegions = function () {
+        region
+            .selectAll('g')
+            .data(regions)
+            .select('text.selected')
+            .text(function (region) {
+                return intersect(region.uiks, selectedUiks);
+            })
+        ;
+    }
 
+
+    var selectedUiks = [];
 
     control
         .selectAll('circle')
@@ -300,6 +305,14 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
                 var result = (sp < control) && (sp > (control - 5));
                 return result;
             });
+            if (wasUnclicked) {// теперь нажата
+                selectedUiks = selectedUiks.concat(relatedUiks);
+            } else {
+                selectedUiks = selectedUiks.filter(function(item) {
+                    return relatedUiks.indexOf(item) === -1;
+                });
+            }
+            updateRegions();
             group
                 .selectAll('circle')
                 .data(relatedUiks, function (uik) { return uik.uik; })
@@ -324,3 +337,23 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
 });
 
+
+function intersect(a, b)
+{
+    var ai=0, bi=0;
+    var result = 0;
+
+    while( ai < a.length && bi < b.length )
+    {
+        if      (a[ai] < b[bi] ){ ai++; }
+        else if (a[ai] > b[bi] ){ bi++; }
+        else /* they're equal */
+        {
+            result++;
+            ai++;
+            bi++;
+        }
+    }
+
+    return result;
+}
