@@ -254,6 +254,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .attr('y', function (region) {
             return 0.5 + yOutdoor(region.percents.to);
         })
+        .text(function (region) { return region.uiks.length; })
         .attr('width', 50)
         .attr('height', 40);
 
