@@ -212,7 +212,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         for (var percentBlock = 0; percentBlock < 3; percentBlock++) {
             var percentPair = getPercentPair(percentBlock);
             var thisUiks = uiks.filter(function (uik) {
-                return uik.sobyaninPercents > percentPair.from && uik.sobyaninPercents <= percentPair.to;
+                return uik.outdoorPercents > percentPair.from && uik.outdoorPercents <= percentPair.to;
             });
 
             regions.push(
