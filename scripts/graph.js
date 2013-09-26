@@ -56,6 +56,7 @@ var yOutdoorAxis = d3.svg.axis()
         if(n.substring(0, 1) == '0') {
             return n.substring(1);
         }
+        return n;
     });
 
 var xSobyanin = d3.scale.linear()
