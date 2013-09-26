@@ -218,7 +218,8 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             regions.push(
                 {
                     observers: observers,
-                    percents: percentPair
+                    percents: percentPair,
+                    uiks: thisUiks
                 }
             );
         }
