@@ -206,30 +206,52 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
     var regions = [];
     for (var observers = 0; observers < 5; observers++) {
+        var uiks = data.filter(function (uik) {
+            return uik.observer == observers;
+        });
         for (var percentBlock = 0; percentBlock < 3; percentBlock++) {
+            var percentPair = getPercentPair(percentBlock);
+            var thisUiks = uiks.filter(function (uik) {
+                return uik.sobyaninPercents > uik.from && uik.sobyaninPercents <= uik.to;
+            });
+
             regions.push(
                 {
                     observers: observers,
-                    percents: getPercentPair(percentBlock)
+                    percents: percentPair
                 }
             );
         }
     }
 
-    region
+    var regionsGroups = region
         .selectAll('rect')
         .data(regions)
         .enter()
+        .append('g');
+
+    regionsGroups
         .append('rect')
         .attr('class', 'group')
         .attr('x', function (region) {
-            return xObservers(region.observers);
+            return 0.5 + xObservers(region.observers);
         })
         .attr('y', function (region) {
             return yOutdoor(region.percents.to);
         })
         .attr('width', xObservers(1))
         .attr('height', yOutdoor(10) - yOutdoor(100))
+    regionsGroups
+        .append('rect')
+        .attr('class', 'group')
+        .attr('x', function (region) {
+            return 0.5 + xObservers(region.observers) + xObservers(1) - 50;
+        })
+        .attr('y', function (region) {
+            return yOutdoor(region.percents.to);
+        })
+        .attr('width', 50)
+        .attr('height', 40);
 
 
 
