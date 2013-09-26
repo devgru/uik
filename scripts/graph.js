@@ -229,7 +229,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
             return yOutdoor(region.percents.to);
         })
         .attr('width', xObservers(1))
-        .attr('height', yOutdoor(100) - yOutdoor(10))
+        .attr('height', yOutdoor(10) - yOutdoor(100))
 
 
 
