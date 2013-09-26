@@ -51,7 +51,7 @@ var y0Axis = d3.svg.axis()
 var yOutdoorAxis = d3.svg.axis()
     .scale(yOutdoor)
     .orient("left")
-    .ticks(20, d3.format(",.1s"));
+    .ticks(20);
 
 var xSobyanin = d3.scale.linear()
     .domain([30, 100])
@@ -71,7 +71,9 @@ var xSobyaninAxis = d3.svg.axis()
 
 var xObserversAxis = d3.svg.axis()
     .scale(xObservers)
-    .orient("bottom");
+    .orient("bottom")
+    .ticks(6)
+    ;
 
 $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
