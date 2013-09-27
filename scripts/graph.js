@@ -75,7 +75,8 @@ var xSobyaninAxis = d3.svg.axis()
 var xObserversAxis = d3.svg.axis()
     .scale(xObservers)
     .orient("bottom")
-    .ticks(6, function () { return ''; });
+    .ticks(6)
+    .tickFormat('');
 
 $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
