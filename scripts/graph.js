@@ -299,10 +299,11 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
     var selectedUiks = [];
 
-    control
+    var controlSelect = control
         .selectAll('circle')
         .data([20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100])
-        .enter()
+        .enter();
+    controlSelect
         .append('circle')
         .attr("class", "unclicked")
         .attr('cx', function(control) { return 800 + control * 3; })
@@ -332,6 +333,14 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
                 .data(relatedUiks, function (uik) { return uik.uik; })
                 .attr('r', wasUnclicked ? 6 : 1.5)
         })
+    ;
+
+    controlSelect
+        .append('circle')
+        .attr('cx', function(control) { return 800 + control * 3; })
+        .attr('cy', 20)
+        .attr('fill', function (d) { return colorScale(d)})
+        .attr('r', 1.5)
     ;
 
     /*
