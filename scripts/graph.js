@@ -301,12 +301,13 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         (function(observers) {
             group
                 .append('text')
-                .attr('x', xObservers(observers))
+                .attr('x', xObservers(observers) + xObservers(1)/2)
                 .attr('y', 650)
+                .attr('text-anchor', 'middle')
                 .text(function () {
                     if(observers == 0) return "нет наблюдателей";
                     if(observers == 1) return "1 наблюдатель";
-                    return observers + " наблюдателей";
+                    return observers + " наблюдателя";
                 })
         })(observers)
     }
