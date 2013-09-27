@@ -75,7 +75,7 @@ var xSobyaninAxis = d3.svg.axis()
 var xObserversAxis = d3.svg.axis()
     .scale(xObservers)
     .orient("bottom")
-    .ticks(6);
+    .ticks(6, function () { return ''; });
 
 $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
@@ -254,7 +254,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .append('text')
         .attr('class', 'total')
         .attr('x', function (region) {
-            return 0.5 + xObservers(region.observers) + xObservers(1) - 30;
+            return 0.5 + xObservers(region.observers) + xObservers(1) - 35;
         })
         .attr('y', function (region) {
             return 0.5 + 20 + yOutdoor(region.percents.to);
@@ -271,7 +271,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         .append('text')
         .attr('class', 'selected')
         .attr('x', function (region) {
-            return 0.5 + xObservers(region.observers) + xObservers(1) - 30;
+            return 0.5 + xObservers(region.observers) + xObservers(1) - 35;
         })
         .attr('y', function (region) {
             return 0.5 + 40 + yOutdoor(region.percents.to);
@@ -294,6 +294,20 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
                 return intersect(region.uiks, selectedUiks);
             })
         ;
+    }
+
+    for(var observers = 0; observers < 5; observers++) {
+        (function(observers) {
+            group
+                .append('text')
+                .attr('x', xObservers(observers))
+                .attr('y', 650)
+                .text(function () {
+                    if(observers == 0) return "нет наблюдателей";
+                    if(observers == 1) return "1 наблюдатель";
+                    return observers + " наблюдателей";
+                })
+        })(observers)
     }
 
 
