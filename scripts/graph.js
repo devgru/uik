@@ -70,7 +70,7 @@ var yObservers = d3.scale.linear()
 
 var xSobyaninAxis = d3.svg.axis()
     .scale(xSobyanin)
-    .orient("bottom");
+    .orient("top");
 
 var xObserversAxis = d3.svg.axis()
     .scale(xObservers)
@@ -80,72 +80,7 @@ var xObserversAxis = d3.svg.axis()
 
 $.get('http://devgru.github.io/uik/uiks.json', function (data) {
 
-//    data = data.slice(0, 50);
-
     var svg;
-    // svg = d3.select("body").append("svg")
-    //     .attr("width", width + margin.left + margin.right)
-    //     .attr("height", height + margin.top + margin.bottom)
-    //     .append("g")
-    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    // svg.append("g")
-    //     .attr("class", "y axis")
-    //     .call(yOutdoorAxis);
-
-    // svg.append("g")
-    //     .attr("class", "x axis")
-    //     .attr("transform", "translate(0," + (height + y0Offset) + ")")
-    //     .call(xSobyaninAxis);
-
-    // svg.append("g")
-    //     .attr("class", "y-zero axis")
-    //     .call(y0Axis);
-
-    // svg
-    //     .selectAll('circle')
-    //     .data(data)
-    //     .enter()
-    //     .append('circle')
-    //     .attr('cx',function (uik) {
-    //         return xSobyanin(uik.sobyaninPercents);
-    //     }).attr('cy',function (uik) {
-    //         if (uik.outdoorPercents == 0) return yOutdoor(minY) + y0Offset;
-    //         return yOutdoor(uik.outdoorPercents);
-    //     }).attr('fill',function (uik) {
-    //         return getUicColor(uik, 'observers');
-    //     }).attr('r', 1.5);
-
-
-    // svg = d3.select("body").append("svg")
-    //     .attr("width", width + margin.left + margin.right)
-    //     .attr("height", height + margin.top + margin.bottom)
-    //     .append("g")
-    //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    // svg.append("g")
-    //     .attr("class", "y axis")
-    //     .call(yOutdoorAxis);
-
-    // svg.append("g")
-    //     .attr("class", "x axis")
-    //     .attr("transform", "translate(0," + (height + y0Offset) + ")")
-    //     .call(xSobyaninAxis);
-
-    // svg
-    //     .selectAll('circle')
-    //     .data(data)
-    //     .enter()
-    //     .append('circle')
-    //     .attr('cx',function (uik) {
-    //         return xSobyanin(uik.sobyaninPercents);
-    //     }).attr('cy',function (uik) {
-    //         return yObservers(uik.observer + Math.random());
-    //     }).attr('fill',function (uik) {
-    //         return getUicColor(uik, 'outdoorPercents');
-    //     }).attr('r', 1.5);
-
-
     svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -170,6 +105,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
     var group = svg.append("g")
     var control = svg.append("g")
     var region = svg.append("g")
+    var zeroRegion = svg.append("g")
 
     newbies = group
         .selectAll('circle')
@@ -210,6 +146,7 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
     };
 
     var regions = [];
+    var zeroRegions = [];
     for (var observers = 0; observers < 5; observers++) {
         var uiks = data.filter(function (uik) {
             return uik.observer == observers;
@@ -228,6 +165,16 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
                 }
             );
         }
+        var thisUiks = uiks.filter(function (uik) {
+            return uik.outdoorPercents == 0;
+        });
+
+        zeroRegions.push(
+            {
+                observers: observers,
+                uiks: thisUiks
+            }
+        );
     }
 
     var regionsGroups = region
@@ -284,6 +231,54 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
         })
     ;
 
+    var zeroRegionsGroups = zeroRegion
+        .selectAll('g')
+        .data(zeroRegions)
+        .enter()
+        .append('g');
+
+    // квадраты регионов графика
+    zeroRegionsGroups
+        .append('rect')
+        .attr('class', 'group')
+        .attr('x', function (region) {
+            return 0.5 + xObservers(region.observers);
+        })
+        .attr('y', 0.5 + yOutdoor(0.1))
+        .attr('width', xObservers(1))
+        .attr('height', 50)
+    ;
+
+    // прямоугольник для цифр
+    zeroRegionsGroups
+        .append('text')
+        .attr('class', 'total')
+        .attr('x', function (region) {
+            return 0.5 + xObservers(region.observers) + xObservers(1) - 35;
+        })
+        .attr('y', 0.5 + 20 + yOutdoor(01))
+        .text(function (region) {
+            if(region.uiks.length == 0)
+                return '';
+            return region.uiks.length;
+        })
+    ;
+
+    // прямоугольник для количества выделенных
+    zeroRegionsGroups
+        .append('text')
+        .attr('class', 'selected')
+        .attr('x', function (region) {
+            return 0.5 + xObservers(region.observers) + xObservers(1) - 35;
+        })
+        .attr('y', 0.5 + 40 + yOutdoor(0.1))
+        .text(function (region) {
+            if(region.uiks.length == 0)
+                return '';
+            return 0;
+        })
+    ;
+
     var updateRegions = function () {
         region
             .selectAll('g')
@@ -295,14 +290,26 @@ $.get('http://devgru.github.io/uik/uiks.json', function (data) {
                 return intersect(region.uiks, selectedUiks);
             })
         ;
+
+        zeroRegion
+            .selectAll('g')
+            .data(zeroRegions)
+            .select('text.selected')
+            .text(function (region) {
+                if(region.uiks.length == 0)
+                    return '';
+                return intersect(region.uiks, selectedUiks);
+            })
+        ;
     }
 
-    for(var observers = 0; observers < 5; observers++) {
+
+    for (var observers = 0; observers < 5; observers++) {
         (function(observers) {
             group
                 .append('text')
                 .attr('x', xObservers(observers) + xObservers(1)/2)
-                .attr('y', 650)
+                .attr('y', 665)
                 .attr('text-anchor', 'middle')
                 .text(function () {
                     if(observers == 0) return "нет наблюдателей";
